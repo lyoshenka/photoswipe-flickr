@@ -65,13 +65,7 @@
             lastItemIndex, // save what image we were on, reopen at the same image
             galleryOptions = {
               index: 0,
-              counterEl: false, // no slide counter
-
-              // make gallery mostly uncloseable (still closable on mobile)
-              closeEl: true,
-              closeElClasses: [],
-              escKey: false,
-              clickToCloseNonZoomable: false
+              counterEl: false // no slide counter
             },
             gallerySetup = function(gallery) {
               gallery.listen('close', function() {
