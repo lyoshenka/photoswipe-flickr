@@ -23,6 +23,67 @@ if (typeof photoswipeFlickr === 'undefined')
   photoswipeFlickr._firstResize = true;
 
 
+  photoswipeFlickr.xhr = function (type, url, data) {
+    var methods = {
+      success: function () {},
+      error: function () {}
+    };
+
+    var parse = function (req) {
+      var result;
+      if (type === 'JSONP') {
+        result = req;
+        req = null;
+      }
+      else {
+        try {
+          result = JSON.parse(req.responseText);
+        } catch (e) {
+          result = req.responseText;
+        }
+      }
+      return [result, req];
+    };
+
+    var returnObj = {
+      success: function (callback) {
+        methods.success = callback;
+        return returnObj;
+      },
+      error: function (callback) {
+        methods.error = callback;
+        return returnObj;
+      }
+    };
+
+    if (type === 'JSONP') {
+      var timestamp = 'callback'+new Date().getTime();
+      window[timestamp] = function(request) { methods.success.apply(methods, parse(request)); };
+      var script = document.createElement('script');
+      script.src = url+'&jsoncallback='+timestamp;
+      document.getElementsByTagName('head')[0].appendChild(script);
+    }
+    else {
+      var request = new (XMLHttpRequest || ActiveXObject)('MSXML2.XMLHTTP.3.0');
+      request.open(type, url, true);
+      request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+      request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+      request.onreadystatechange = function () {
+        if (request.readyState === 4) {
+          if (request.status === 200) {
+            methods.success.apply(methods, parse(request));
+          }
+          else {
+            methods.error.apply(methods, parse(request));
+          }
+        }
+      };
+      request.send(data);
+    }
+
+    return returnObj;
+  };
+
 
   photoswipeFlickr.initGallery = function(callback) {
     callback = callback || function(){};
@@ -130,36 +191,40 @@ if (typeof photoswipeFlickr === 'undefined')
     }
     else
     {
-      var sizeParams = $.map(sizes, function(ext) { return 'url_'+ext; }).join(','),
-      url = 'https://api.flickr.com/services/rest?method=flickr.photosets.getPhotos&api_key=' + apiKey + '&photoset_id=' +
-            photosetId + '&extras=' + sizeParams + '&format=json&jsoncallback=?';
+      var sizeParams = Object.keys(sizes).map(function(size) { return 'url_'+sizes[size]; }).join(','),
+          url = 'https://api.flickr.com/services/rest?method=flickr.photosets.getPhotos&api_key=' + apiKey + '&photoset_id=' +
+                photosetId + '&extras=' + sizeParams + '&format=json';
 
-      $.getJSON(url, function(data) {
-        var items = [];
+      photoswipeFlickr.xhr('JSONP', url)
+        .error(function(data) {
+          alert('Getting photos from Flickr failed. Check the console.');
+        })
+        .success(function(data) {
+          var i, items = [];
 
-        $.each(data.photoset.photo, function() {
-          var photo = this,
-              item = { sizeData: {} },
-              size, ext;
-          for (size in sizes)
-          {
-            ext = sizes[size];
-            item.sizeData[ext] = {
-              src: photo['url_'+ext],
-              w: photo['width_'+ext],
-              h: photo['height_'+ext],
+          for (i in data.photoset.photo) {
+            var photo = data.photoset.photo[i],
+                item = { sizeData: {} },
+                size, ext;
+            for (size in sizes)
+            {
+              ext = sizes[size];
+              item.sizeData[ext] = {
+                src: photo['url_'+ext],
+                w: photo['width_'+ext],
+                h: photo['height_'+ext],
+              }
+              item.original_src = photo.url_o;
+              //item.title = photo.title;
             }
-            item.original_src = photo.url_o;
-            //item.title = photo.title;
-          }
-          items.push(item);
+            items.push(item);
+          };
+
+          photoswipeFlickr._flickrData = items;
+
+          photoswipeFlickr._initGallery(photoswipeFlickr._flickrData, photoswipeFlickr._galleryOptions);
+          callback(photoswipeFlickr._gallery);
         });
-
-        photoswipeFlickr._flickrData = items;
-
-        photoswipeFlickr._initGallery(photoswipeFlickr._flickrData, photoswipeFlickr._galleryOptions);
-        callback(photoswipeFlickr._gallery);
-      });
     }
   };
 };

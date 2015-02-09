@@ -15,7 +15,6 @@
   <body>
     <script src="/photoswipe/photoswipe.min.js"></script> <!-- Core JS file -->
     <script src="/photoswipe/photoswipe-ui-default.min.js"></script> <!-- UI JS file -->
-    <script src="//code.jquery.com/jquery-2.1.3.min.js"></script>
     <script src="/photoswipe-flickr.js"></script>
 
 
@@ -59,7 +58,7 @@
     </div>
 
     <script>
-      $(function() {
+      var onload = function() {
         var flickrApiKey = 'FILL-ME-IN',
             flickrPhotosetId = 'FILL-ME-IN',
 
@@ -88,8 +87,18 @@
             };
 
         photoswipeFlickr(flickrApiKey,flickrPhotosetId, galleryOptions, gallerySetup);
-        $('#reopenGallery').show().on('click', function(){ photoswipeFlickr.initGallery(gallerySetup); });
-      });
+
+        var reopenLink = document.getElementById('reopenGallery');
+        reopenLink.style.display = '';
+        reopenLink.addEventListener('click', function(){ photoswipeFlickr.initGallery(gallerySetup); });
+      };
+
+      if (document.readyState != 'loading') {
+        onload();
+      }
+      else {
+        document.addEventListener('DOMContentLoaded', onload);
+      }
     </script>
   </body>
 </html>
