@@ -20,6 +20,8 @@ important parts are to include `photoswipe-flickr.js` after you include the phot
 album ID (and options for the photoswipe gallery, if you want). There's also a bit of extra code to reopen the gallery after it has been closed, but
 that's optional.
 
+Here's [another demo](http://i.grin.io/iceland/slideshow.html) of the slideslow in action.
+
 ## Bugs/Feedback
 
 Email me: lyoshenka@gmail.com
