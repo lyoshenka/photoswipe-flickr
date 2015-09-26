@@ -146,3 +146,9 @@
 .pswp__error-msg a {
   color: #CCC;
   text-decoration: underline; }
+
+/* Fix for memory usage warning: https://github.com/dimsemenov/PhotoSwipe/issues/855 */
+.pswp__zoom-wrap {
+  will-change: auto !important;
+  -webkit-backface-visibility: visible !important;
+}
