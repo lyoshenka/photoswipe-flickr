@@ -96,9 +96,9 @@ if (typeof photoswipeFlickr === 'undefined')
 
       // Set image source & size based on real viewport width
       var ext = photoswipeFlickr._flickrPhotoSizes[photoswipeFlickr._currentSize];
-      item.src = item.sizeData[ext].src || item['o'].src;
-      item.w = item.sizeData[ext].w || item['o'].w;
-      item.h = item.sizeData[ext].h || item['o'].h;
+      item.src = item.sizeData[ext].src || item.sizeData['o'].src;
+      item.w = item.sizeData[ext].w || item.sizeData['o'].w;
+      item.h = item.sizeData[ext].h || item.sizeData['o'].h;
 
       // It doesn't really matter what will you do here, as long as item.src, item.w and item.h have valid values.
       //
