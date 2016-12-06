@@ -96,9 +96,27 @@ if (typeof photoswipeFlickr === 'undefined')
 
       // Set image source & size based on real viewport width
       var ext = photoswipeFlickr._flickrPhotoSizes[photoswipeFlickr._currentSize];
-      item.src = item.sizeData[ext].src || item['o'].src;
-      item.w = item.sizeData[ext].w || item['o'].w;
-      item.h = item.sizeData[ext].h || item['o'].h;
+
+      if (typeof item.sizeData[ext].src == 'undefined') {
+        // The desired size is not available
+        // Set to original as a fallback
+        ext = 'o';
+        // Is the next size up available?
+        for (size in photoswipeFlickr._flickrPhotoSizes) {
+          if (size > photoswipeFlickr._currentSize) {
+            var newExt = photoswipeFlickr._flickrPhotoSizes[size];
+            if (typeof item.sizeData[newExt].src != 'undefined') {
+              // Found one
+              ext = newExt;
+              break;
+            }
+          }
+        }
+      }
+
+      item.src = item.sizeData[ext].src || item.sizeData['o'].src;
+      item.w = item.sizeData[ext].w || item.sizeData['o'].w;
+      item.h = item.sizeData[ext].h || item.sizeData['o'].h;
 
       // It doesn't really matter what will you do here, as long as item.src, item.w and item.h have valid values.
       //
