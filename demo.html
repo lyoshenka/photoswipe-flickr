@@ -59,6 +59,14 @@
     <script src="photoswipe-flickr.js"></script>
 
     <script>
+      var getHashParameter = function(name) {
+        var locHash = location.hash.substr(1),
+            ret     = locHash.substr(locHash.indexOf(name + '='))
+                       .split('&')[0]
+                       .split('=')[1];
+        return ret;
+      };
+
       var onload = function() {
         var flickrApiKey = 'FILL-ME-IN',
             flickrPhotosetId = 'FILL-ME-IN',
@@ -95,10 +103,7 @@
 
         if (flickrPhotosetId == 'FILL-ME-IN') {
           // Look for album ID in URL: example.com/demo.html#aid=ID
-          var locHash = location.hash.substr(1),
-              ret     = locHash.substr(locHash.indexOf('aid='))
-                         .split('&')[0]
-                         .split('=')[1];
+          var ret = getHashParameter('aid');
 
           if (ret == null) {
             ret = prompt('Enter a Flickr album URL or ID:');
