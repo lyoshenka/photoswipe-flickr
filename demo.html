@@ -86,8 +86,17 @@
             };
 
         if (flickrPhotosetId == 'FILL-ME-IN') {
+          // Look for album ID in URL: example.com/demo.html#aid=ID
+          var locHash = location.hash.substr(1),
+              ret     = locHash.substr(locHash.indexOf('aid='))
+                         .split('&')[0]
+                         .split('=')[1];
+
+          if (ret == null) {
+            ret = prompt('Enter a Flickr album URL or ID:');
+          }
+
           // Get ID from https://www.flickr.com/photos/user/albums/ID or ID
-          ret = prompt('Enter a Flickr album URL or ID:');
           flickrPhotosetId = ret.split('/').pop() || ret;
         }
 
