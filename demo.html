@@ -94,10 +94,14 @@
             };
 
         if (flickrApiKey == 'FILL-ME-IN') {
-          flickrApiKey = prompt('Enter a Flickr API key:');
+          // Look for API key in URL: example.com/demo.html#key=API_key
+          var flickrApiKey = getHashParameter('key');
           if (flickrApiKey == null) {
-            alert('You have to fill in your Flickr API key for the script to work.');
-            return;
+            flickrApiKey = prompt('Enter a Flickr API key:');
+            if (flickrApiKey == null) {
+              alert('You have to fill in your Flickr API key for the script to work.');
+              return;
+            }
           }
         }
 
