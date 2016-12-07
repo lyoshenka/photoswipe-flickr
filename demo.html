@@ -85,6 +85,14 @@
               reopenLink.style.display = '';
             };
 
+        if (flickrApiKey == 'FILL-ME-IN') {
+          flickrApiKey = prompt('Enter a Flickr API key:');
+          if (flickrApiKey == null) {
+            alert('You have to fill in your Flickr API key for the script to work.');
+            return;
+          }
+        }
+
         if (flickrPhotosetId == 'FILL-ME-IN') {
           // Look for album ID in URL: example.com/demo.html#aid=ID
           var locHash = location.hash.substr(1),
@@ -96,16 +104,14 @@
             ret = prompt('Enter a Flickr album URL or ID:');
           }
 
-          // Get ID from https://www.flickr.com/photos/user/albums/ID or ID
-          flickrPhotosetId = ret.split('/').pop() || ret;
+          if (ret != null) {
+            // Get ID from https://www.flickr.com/photos/user/albums/ID or ID
+            flickrPhotosetId = ret.split('/').pop() || ret;
+          }
         }
-
-        if (flickrApiKey == 'FILL-ME-IN' || flickrPhotosetId == 'FILL-ME-IN')
-        {
-          alert('You have to fill in your flickr API key and photoset ID for the script to work.');
-        }
-        else
-        {
+        if (flickrPhotosetId == 'FILL-ME-IN') {
+          alert('You have to fill in a Flickr album ID for the script to work.');
+        } else {
           photoswipeFlickr(flickrApiKey,flickrPhotosetId, galleryOptions, gallerySetup);
           reopenLink.addEventListener('click', function(){ photoswipeFlickr.initGallery(gallerySetup); });
         }
