@@ -15,7 +15,9 @@ string of numbers at the end is the album ID.
 
 ### Check the demo
 
-Look at [the demo](https://github.com/lyoshenka/photoswipe-flickr/blob/master/demo.html) for a very simple example of how to set everything up. The
+[Live demo here](http://lyoshenka.github.io/photoswipe-flickr/demo.html)
+
+Look at the [source for the demo](https://github.com/lyoshenka/photoswipe-flickr/blob/master/demo.html) for a very simple example of how to set everything up. The
 important parts are to include `photoswipe-flickr.js` after you include the photoswipe JS, and then to call `photoswipeFlickr()` with your API key and
 album ID (and options for the photoswipe gallery, if you want). There's also a bit of extra code to reopen the gallery after it has been closed, but
 that's optional.
