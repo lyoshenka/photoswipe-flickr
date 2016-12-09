@@ -96,10 +96,10 @@
         if (flickrApiKey == 'FILL-ME-IN') {
           // Look for API key in URL: example.com/demo.html#key=API_key
           var flickrApiKey = getHashParameter('key');
-          if (flickrApiKey == null) {
+          if (!flickrApiKey) {
             flickrApiKey = prompt('Enter a Flickr API key:');
-            if (flickrApiKey == null) {
-              alert('You have to fill in your Flickr API key for the script to work.');
+            if (!flickrApiKey) {
+              alert('You have to fill in your Flickr API key for the demo to work.');
               return;
             }
           }
@@ -107,23 +107,25 @@
 
         if (flickrPhotosetId == 'FILL-ME-IN') {
           // Look for album ID in URL: example.com/demo.html#aid=ID
-          var ret = getHashParameter('aid');
+          var albumId = getHashParameter('aid');
 
-          if (ret == null) {
-            ret = prompt('Enter a Flickr album URL or ID:');
+          if (!albumId) {
+            albumId = prompt('Enter a Flickr album URL or ID:');
           }
 
-          if (ret != null) {
+          if (albumId) {
             // Get ID from https://www.flickr.com/photos/user/albums/ID or ID
-            flickrPhotosetId = ret.split('/').pop() || ret;
+            flickrPhotosetId = albumId.split('/').pop() || albumId;
           }
         }
-        if (flickrPhotosetId == 'FILL-ME-IN') {
-          alert('You have to fill in a Flickr album ID for the script to work.');
-        } else {
-          photoswipeFlickr(flickrApiKey,flickrPhotosetId, galleryOptions, gallerySetup);
-          reopenLink.addEventListener('click', function(){ photoswipeFlickr.initGallery(gallerySetup); });
-        }
+        if (!flickrPhotosetId || flickrPhotosetId == 'FILL-ME-IN') {
+          alert('You have to fill in a Flickr album ID for the demo to work.');
+          return;
+        } 
+        
+        
+        photoswipeFlickr(flickrApiKey,flickrPhotosetId, galleryOptions, gallerySetup);
+        reopenLink.addEventListener('click', function(){ photoswipeFlickr.initGallery(gallerySetup); });
       };
 
       if (document.readyState != 'loading') {
