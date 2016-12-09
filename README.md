@@ -15,7 +15,7 @@ string of numbers at the end is the album ID.
 
 ### Check the demo
 
-[Live demo here](http://lyoshenka.github.io/photoswipe-flickr/demo.html)
+[Live demo here](http://lyoshenka.github.io/photoswipe-flickr/demo.html#key=4ca3b9ef09d104c57ecd6f017d7d6c42&aid=72157648364623184)
 
 Look at the [source for the demo](https://github.com/lyoshenka/photoswipe-flickr/blob/master/demo.html) for a very simple example of how to set everything up. The
 important parts are to include `photoswipe-flickr.js` after you include the photoswipe JS, and then to call `photoswipeFlickr()` with your API key and
