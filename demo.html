@@ -59,6 +59,14 @@
     <script src="photoswipe-flickr.js"></script>
 
     <script>
+      var getHashParameter = function(name) {
+        var locHash = location.hash.substr(1),
+            ret     = locHash.substr(locHash.indexOf(name + '='))
+                       .split('&')[0]
+                       .split('=')[1];
+        return ret;
+      };
+
       var onload = function() {
         var flickrApiKey = 'FILL-ME-IN',
             flickrPhotosetId = 'FILL-ME-IN',
@@ -85,12 +93,34 @@
               reopenLink.style.display = '';
             };
 
-        if (flickrApiKey == 'FILL-ME-IN' || flickrPhotosetId == 'FILL-ME-IN')
-        {
-          alert('You have to fill in your flickr API key and photoset ID for the script to work.');
+        if (flickrApiKey == 'FILL-ME-IN') {
+          // Look for API key in URL: example.com/demo.html#key=API_key
+          var flickrApiKey = getHashParameter('key');
+          if (flickrApiKey == null) {
+            flickrApiKey = prompt('Enter a Flickr API key:');
+            if (flickrApiKey == null) {
+              alert('You have to fill in your Flickr API key for the script to work.');
+              return;
+            }
+          }
         }
-        else
-        {
+
+        if (flickrPhotosetId == 'FILL-ME-IN') {
+          // Look for album ID in URL: example.com/demo.html#aid=ID
+          var ret = getHashParameter('aid');
+
+          if (ret == null) {
+            ret = prompt('Enter a Flickr album URL or ID:');
+          }
+
+          if (ret != null) {
+            // Get ID from https://www.flickr.com/photos/user/albums/ID or ID
+            flickrPhotosetId = ret.split('/').pop() || ret;
+          }
+        }
+        if (flickrPhotosetId == 'FILL-ME-IN') {
+          alert('You have to fill in a Flickr album ID for the script to work.');
+        } else {
           photoswipeFlickr(flickrApiKey,flickrPhotosetId, galleryOptions, gallerySetup);
           reopenLink.addEventListener('click', function(){ photoswipeFlickr.initGallery(gallerySetup); });
         }
@@ -98,9 +128,6 @@
 
       if (document.readyState != 'loading') {
         onload();
-      }
-      else {
-        document.addEventListener('DOMContentLoaded', onload);
       }
     </script>
   </body>
